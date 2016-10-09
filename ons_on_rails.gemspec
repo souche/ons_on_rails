@@ -7,8 +7,7 @@ require 'ons_on_rails/version'
 Gem::Specification.new do |spec|
   spec.name          = 'ons_on_rails'
   spec.version       = OnsOnRails::VERSION
-  spec.authors       = ['caochaoping']
-  spec.email         = ['caochaoping@souche.com']
+  spec.authors       = 'souche'
 
   spec.summary       = 'integrate the ons gem into a rails application'
   spec.homepage      = 'https://github.com/souche/ons_on_rails'
