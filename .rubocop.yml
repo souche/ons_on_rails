@@ -1,0 +1,47 @@
+require: rubocop-rspec
+
+AllCops:
+  Exclude:
+    - 'spec/dummy/db/**/*'
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 160
+
+Metrics/LineLength:
+  Max: 160
+
+Metrics/MethodLength:
+  Max: 40
+
+Metrics/PerceivedComplexity:
+  Max: 12
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GlobalVars:
+  AllowedVariables: ['$user_service_publisher']
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 16
+
+RSpec/MultipleExpectations:
+  Max: 8

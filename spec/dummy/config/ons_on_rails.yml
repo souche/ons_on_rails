@@ -1,0 +1,25 @@
+default: &default
+  access_key: <%= ENV['ONS_ACCESS_KEY'] %>
+  secret_key: <%= ENV['ONS_SECRET_KEY'] %>
+  user_service_subscriber:
+    consumer_id: <%= ENV['ONS_CONSUMER_ID'] %>
+    topic: <%= ENV['ONS_TOPIC'] %>
+    tag: 'user_service'
+  user_service_publisher:
+    producer_id: <%= ENV['ONS_PRODUCER_ID'] %>
+    topic: <%= ENV['ONS_TOPIC'] %>
+    tag: 'user_service'
+  rspec_erb: <%= 'ERB' %>
+  rspec_rails_env: ''
+
+development:
+  <<: *default
+  rspec_rails_env: 'development'
+
+test:
+  <<: *default
+  rspec_rails_env: 'test'
+
+production:
+  <<: *default
+  rspec_rails_env: 'production'
