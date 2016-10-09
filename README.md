@@ -1,3 +1,11 @@
+[![GitHub issues](https://img.shields.io/github/issues/souche/ons_on_rails.svg)](https://github.com/souche/ons_on_rails/issues)
+[![GitHub forks](https://img.shields.io/github/forks/souche/ons_on_rails.svg)](https://github.com/souche/ons_on_rails/network)
+[![GitHub stars](https://img.shields.io/github/stars/souche/ons_on_rails.svg)](https://github.com/souche/ons_on_rails/stargazers)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/github/souche/ons_on_rails/master)
+[![Gem Version](http://img.shields.io/gem/v/ons_on_rails.svg)](https://rubygems.org/gems/ons_on_rails)
+[![License](http://img.shields.io/:license-mit-blue.svg)](https://souche.mit-license.org/)
+
+
 # OnsOnRails
 
 整合阿里云 ONS 到 Rails 项目
