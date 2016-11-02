@@ -60,7 +60,19 @@ module OnsOnRails
   # @param subscriber_class_name [Symbol, String] the subscriber's class name
   # @param app_path [String] the Rails root directory path
   def self.run_subscriber_as_a_daemon(subscriber_class_name, app_path)
-    options = {
+    options = { daemon_name: subscriber_class_name.to_s.underscore }
+    run_multi_subscriber_as_a_daemon(Array(subscriber_class_name), app_path, options)
+  end
+
+  # Run multi-subscribers as a separate process.
+  #
+  # @param subscriber_class_name_array [Array<Symbol, String>] the array of subscriber's class name
+  # @param app_path [String] the Rails root directory path
+  # @param options [Hash]
+  # @option options [String] :daemon_name ('subscribers') The name of the daemon. This will be used to contruct the name of the pid files and log files
+  def self.run_multi_subscriber_as_a_daemon(subscriber_class_name_array, app_path, options = {})
+    daemon_name = options.fetch(:daemon_name, 'subscribers')
+    daemon_options = {
       backtrace: true,
       dir_mode: :normal,
       dir: File.join(app_path, 'tmp', 'pids'),
@@ -68,18 +80,20 @@ module OnsOnRails
       log_output: true
     }
 
-    subscriber_class_name = subscriber_class_name.to_s.camelize
-    Daemons.run_proc(subscriber_class_name.underscore, options) do
+    Daemons.run_proc(daemon_name, daemon_options) do
       require File.join(app_path, 'config', 'environment')
       require 'ons' unless defined?(Ons)
 
-      subscriber_class = subscriber_class_name.constantize
-      subscriber_class.check_subscriber_definition!
+      subscriber_class_name_array.each do |subscriber_class_name|
+        subscriber_class_name = subscriber_class_name.to_s.camelize
+        subscriber_class = subscriber_class_name.constantize
+        subscriber_class.check_subscriber_definition!
 
-      options = subscriber_class.ons_options
-      Ons::Consumer.new(options.fetch(:access_key), options.fetch(:secret_key), options.fetch(:consumer_id))
-                   .subscribe(options.fetch(:topic), options.fetch(:tag), &->(message) { subscriber_class.consume(message) })
-                   .start
+        options = subscriber_class.ons_options
+        Ons::Consumer.new(options.fetch(:access_key), options.fetch(:secret_key), options.fetch(:consumer_id))
+                     .subscribe(options.fetch(:topic), options.fetch(:tag), &->(message) { subscriber_class.consume(message) })
+                     .start
+      end
 
       Ons.register_cleanup_hooks
       Ons.loop_forever
