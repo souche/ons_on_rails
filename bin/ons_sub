@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+APP_PATH = Dir.getwd
+
+require 'ons_on_rails'
+require File.join(APP_PATH, 'config', 'environment')
+
+subscribers = OnsOnRails.ons_default_options.keys.select { |k| /subscriber/ === k }
+daemon_name = OnsOnRails.ons_default_options[:daemon_name] || "ons_subscriber [#{File.basename(APP_PATH)}]"
+
+ARGV << 'run' if ARGV.blank?
+OnsOnRails.run_multi_subscriber_as_a_daemon(subscribers, APP_PATH, daemon_name: daemon_name)
