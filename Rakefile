@@ -15,11 +15,4 @@ RSpec::Core::RakeTask.new :spec do
   Rake::Task['app:db:schema:load'].invoke
 end
 
-task 'spec:all' do
-  Dir.glob(File.join(__dir__, 'gemfiles', '*.gemfile')).each do |gemfile|
-    sh "BUNDLE_GEMFILE=#{gemfile} bundle install --quiet"
-    sh "BUNDLE_GEMFILE=#{gemfile} bin/rake spec"
-  end
-end
-
-task default: 'spec:all'
+task default: :spec
