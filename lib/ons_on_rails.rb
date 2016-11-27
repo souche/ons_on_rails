@@ -81,7 +81,7 @@ module OnsOnRails
     }
 
     Daemons.run_proc(daemon_name, daemon_options) do
-      require File.join(app_path, 'config', 'environment')
+      require File.join(app_path, 'config', 'environment') unless defined?(::Rails)
       require 'ons' unless defined?(Ons)
 
       subscriber_class_name_array.each do |subscriber_class_name|

@@ -41,6 +41,7 @@ Bundler.require(RUBY_PLATFORM.match(/(linux|darwin)/)[0].to_sym)
 # access_key，阿里云官网身份验证访问码
 # secret_key，阿里云身份验证密钥
 #
+# daemon_name 消费者守护进程名称, 默认为: ons_subscriber [当前项目名称]
 # user_service_subscriber，消费者名称，需要与实际定义的类名信息保持一致，具体见下文的消费者章节
 # user_service_subscriber#consumer_id，阿里云 MQ 控制台创建的 Consumer ID
 # user_service_subscriber#topic，阿里云 MQ 控制台创建的 Topic
@@ -54,10 +55,13 @@ Bundler.require(RUBY_PLATFORM.match(/(linux|darwin)/)[0].to_sym)
 default: &default
   access_key: <%= ENV['ONS_ACCESS_KEY'] %>
   secret_key: <%= ENV['ONS_SECRET_KEY'] %>
+  
+  daemon_name: <%= ENV['ONS_DAEMON_NAME'] %>
   user_service_subscriber:
     consumer_id: <%= ENV['ONS_CONSUMER_ID'] %>
     topic: <%= ENV['ONS_TOPIC'] %>
     tag: 'user_service'
+    
   user_service_publisher:
     producer_id: <%= ENV['ONS_PRODUCER_ID'] %>
     topic: <%= ENV['ONS_TOPIC'] %>
@@ -88,7 +92,18 @@ class UserServiceSubscriber
 end
 ```
 
-#### 在 daemons/ 目录下添加守护进程定义文件，比如 user\_service\_subscriber\_control.rb
+#### 启动或关闭消费者进程，此进程会与阿里云 MQ 建立 TCP 连接，然后在本地消费消息
+
+```bash
+$ bundle exec ons_sub [start|stop|restart]
+
+# get commands help 
+$ bundle exec ons_sub -h
+```
+
+#### 另一种启动方式
+
+在 daemons/ 目录下添加守护进程定义文件，比如 user\_service\_subscriber\_control.rb
 
 ```ruby
 require 'rubygems'
@@ -98,7 +113,7 @@ APP_PATH = File.expand_path('../..', __FILE__)
 OnsOnRails.run_subscriber_as_a_daemon(:user_service_subscriber, APP_PATH)
 ```
 
-#### 启动或关闭消费者进程，此进程会与阿里云 MQ 建立 TCP 连接，然后在本地消费消息
+启动或关闭消费者进程
 
 ```bash
 $ RAILS_ENV=development bundle exec ruby daemons/user_service_subscriber_control.rb start
